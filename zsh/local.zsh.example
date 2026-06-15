@@ -1,0 +1,11 @@
+# ── machine: <hostname> ───────────────────────────────────────────────────────
+# Copy this file to ~/.config/zsh/local.zsh (never commit that file).
+# Fill in values for this specific machine. Run `hostname` to find your name.
+
+# Machine identifier
+# export MACHINE_NAME="$(hostname -s)"
+
+# Extra PATH entries for tools installed outside Homebrew
+# export PATH="/usr/local/myapp/bin:$PATH"
+
+# Any other machine-specific paths, tokens, or vars go here

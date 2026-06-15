@@ -1,0 +1,17 @@
+# generated at runtime — never commit
+zsh/config/secrets.zsh
+
+# machine-specific — created from local.zsh.example, never commit
+zsh/config/local.zsh
+
+# health check artifacts
+.health-report.json
+.health-fix.log
+.health-heal.log
+
+# macOS
+.DS_Store
+
+# session / editor state
+.remember/
+.claude/

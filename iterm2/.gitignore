@@ -1,0 +1,3 @@
+# Never commit the full iTerm2 plist — key bindings and global settings are machine-specific.
+# Only DynamicProfiles/profiles.json is committed (profiles only).
+*.plist

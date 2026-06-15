@@ -314,3 +314,34 @@ scripts/
 | `iterm2-log` | iTerm2 profile history with timestamps |
 | `iterm2-restore <hash>` | Restore a previous iTerm2 profile |
 | `sync-secrets` | Regenerate secrets.zsh from pass store |
+
+---
+
+## Make it yours
+
+The zsh config, aliases, and Brewfile in this repo reflect my own setup and opinions. They work well for me — but your workflow is different.
+
+When you fork this repo, treat the config files as a starting point, not a contract:
+
+- Swap out packages in `Brewfile` for what you actually use
+- Rewrite `aliases.zsh` to match your own shortcuts
+- Add or remove tool inits in `tools.zsh`
+- Adjust `exports.zsh` for your paths and editor
+
+The tooling (install, health, heal, sync) is the reusable part. The config is just a default. Change anything you want in your fork — that's the whole point.
+
+---
+
+## Disclaimer
+
+This project is provided as-is, built from personal daily use. It works on my machines but may have gaps or edge cases on yours. It makes changes to your shell environment — always review what it does before running it.
+
+Your existing config is backed up before anything is modified. If something goes wrong, `bash scripts/restore-backup.sh` puts everything back.
+
+Use it, break it, fix it, make it better. PRs welcome.
+
+---
+
+## License
+
+MIT © [Mahmoud Nassar](https://github.com/NassarX)

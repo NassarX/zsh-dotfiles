@@ -1,0 +1,24 @@
+# ── optional — install what fits your stack ───────────────────────────────────
+# Copy the lines you need into your Brewfile or install individually.
+
+# languages
+# brew "openjdk@21"
+# brew "ruby"
+# brew "go"
+# brew "rust"
+
+# databases
+# brew "mysql@8.4"
+# brew "postgresql@17"
+# brew "redis"
+
+# devops / cloud
+# brew "awscli"
+# brew "kubectl"
+# brew "helm"
+# brew "terraform"
+# brew "git-filter-repo"
+
+# php
+# brew "php"
+# brew "composer"

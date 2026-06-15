@@ -1,7 +1,19 @@
 # ── optional — install what fits your stack ───────────────────────────────────
 # Copy the lines you need into your Brewfile or install individually.
 
-# languages
+# editor
+# brew "neovim"
+# brew "vim"
+
+# http / api tools
+# brew "httpie"
+# brew "curl"
+
+# languages & runtimes
+# brew "pyenv"
+# brew "uv"
+# brew "node"
+# brew "pnpm"
 # brew "openjdk@21"
 # brew "ruby"
 # brew "go"

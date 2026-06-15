@@ -169,6 +169,17 @@ setup_gitconfig() {
     return
   fi
 
+  local global_name global_email
+  global_name=$(git config --global user.name  2>/dev/null || true)
+  global_email=$(git config --global user.email 2>/dev/null || true)
+
+  if [[ -n "$global_name" && -n "$global_email" ]]; then
+    git config --file "$dest" user.name  "$global_name"
+    git config --file "$dest" user.email "$global_email"
+    _ok "git identity set from global config: $global_name <$global_email>"
+    return
+  fi
+
   echo ""
   read -rp "   Git name  (e.g. Jane Smith): "  git_name
   read -rp "   Git email (e.g. jane@example.com): " git_email

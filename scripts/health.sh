@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 # Full dotfiles environment health check.
-# Checks: symlinks, git sync, Brewfile drift, secrets, shell load.
+# Checks: symlinks, git sync, Brewfile drift, stale Brewfile entries,
+#         broken skill symlinks, secrets, shell load.
 # Exit code: 0 = all OK, 1 = issues found.
 set -uo pipefail
 
@@ -81,9 +82,44 @@ if command -v brew &>/dev/null; then
     brew bundle check --file="$DOTFILES/Brewfile" 2>&1 | grep "^x " | sed 's/^/    /'
     _issue "brew_missing" "warn" "safe" "brew bundle install --file=$DOTFILES/Brewfile"
   fi
+  # Stale: in Brewfile but not installed (uninstalled without updating Brewfile)
+  stale_formulae=()
+  while IFS= read -r formula; do
+    [[ -z "$formula" ]] && continue
+    brew list --formula "$formula" &>/dev/null || stale_formulae+=("$formula")
+  done < <(grep '^brew ' "$DOTFILES/Brewfile" 2>/dev/null | sed 's/brew "\([^"]*\)".*/\1/')
+  if [[ ${#stale_formulae[@]} -eq 0 ]]; then
+    _ok "no stale Brewfile entries"
+  else
+    _warn "${#stale_formulae[@]} stale formula(e) in Brewfile not installed: ${stale_formulae[*]}"
+    stale_json=$(printf '%s\n' "${stale_formulae[@]}" | jq -R . | jq -s .)
+    _issue "brew_stale" "warn" "safe" "remove stale formulae from Brewfile" \
+      "$(jq -n --argjson f "$stale_json" '{formulae:$f}')"
+  fi
 else
   _fail "brew not found — Homebrew not installed"
   _issue "brew_not_installed" "fail" "manual" "install Homebrew from https://brew.sh"
+fi
+
+echo ""
+echo "── Broken symlinks ──────────────────────────────────────────────────────────"
+
+_broken_total=0
+_broken_paths=()
+while IFS= read -r _dir; do
+  while IFS= read -r _link; do
+    _broken_paths+=("$_link")
+    _broken_total=$((_broken_total + 1))
+  done < <(find "$_dir" -maxdepth 1 -type l ! -exec test -e {} \; -print 2>/dev/null)
+done < <(find "$HOME" -maxdepth 3 -type d -name "skills" 2>/dev/null)
+
+if [[ $_broken_total -eq 0 ]]; then
+  _ok "no broken symlinks in skill dirs"
+else
+  _warn "$_broken_total broken symlink(s) in skill dirs"
+  _broken_json=$(printf '%s\n' "${_broken_paths[@]}" | jq -R . | jq -s .)
+  _issue "broken_symlinks" "warn" "safe" "delete $_broken_total broken symlinks in skill dirs" \
+    "$(jq -n --argjson p "$_broken_json" '{paths:$p}')"
 fi
 
 echo ""

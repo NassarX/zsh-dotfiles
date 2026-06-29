@@ -74,6 +74,24 @@ else
           || { _err "brew bundle install failed"; safe_failed=1; }
         ;;
 
+      brew_stale)
+        while IFS= read -r formula; do
+          [[ -z "$formula" ]] && continue
+          sed -i '' "/^brew \"${formula}\"/d" "$DOTFILES/Brewfile" \
+            && _fixed "Brewfile: removed stale entry '$formula'" \
+            || { _err "failed to remove '$formula' from Brewfile"; safe_failed=1; }
+        done < <(jq -r '.[].formulae[]' <<< "$issues" 2>/dev/null)
+        ;;
+
+      broken_symlinks)
+        while IFS= read -r link; do
+          [[ -z "$link" ]] && continue
+          rm "$link" \
+            && _fixed "removed broken symlink: $(basename "$link")" \
+            || { _err "failed to remove: $link"; safe_failed=1; }
+        done < <(jq -r '.[].paths[]' <<< "$issues" 2>/dev/null)
+        ;;
+
       iterm2_prefs)
         bash "$DOTFILES/scripts/setup-iterm2.sh" \
           && _fixed "iTerm2 preferences folder configured" \
